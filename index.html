@@ -31,7 +31,8 @@
                         <input type="phone" class="form-control" placeholder="Telefone/Celular" v-model="contact.phone">
                     </div>
                     <div class="form-group ml-1">
-                        <button class="btn btn-sm btn-rounded btn-success" @click.prevent="saveContact(contact)">Criar contatos</button>
+                        <button v-if="!isEdit" class="btn btn-sm btn-rounded btn-success" @click.prevent="saveContact(contact)">Criar contatos</button>
+                        <button v-if="isEdit" class="btn btn-sm btn-rounded btn-primary" @click.prevent="updateContact(contact)">Atualizar contatos</button>
                     </div>
                 </form>
             </div>
@@ -42,7 +43,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{contact.name}}</h5>
                                 <p class="card-text">{{contact.email}}, {{contact.phone}}</p>
-                                <a href="#" class="btn  btn-sm btn-primary">Editar</a>
+                                <a href="#" class="btn  btn-sm btn-primary" @click.prevent="editContact(contact)">Editar</a>
                                 <a href="#" class="btn  btn-sm btn-danger" @click.prevent="removeContact(contact.id)">Deletar</a>
                             </div>
                         </div>
@@ -63,7 +64,8 @@
                     name: '',
                     email: '',
                     phone: ''
-                }
+                },
+                isEdit: false
             },
             created(){
                 this.contacts = JSON.parse(localStorage.getItem('contactsApp'))
@@ -85,6 +87,8 @@
                     this.contacts = contacts; //atualizar e trazer o novo dado
                     // atualizar localStorage idependentimente de novo contato ou nova adicao
                     localStorage.setItem('contactsApp', JSON.stringify(contacts))
+
+                    location.reload();
                 },
 
                 removeContact(contactId){
@@ -100,6 +104,27 @@
                     this.contacts = contacts;
 
                     localStorage.setItem('contactsApp', JSON.stringify(contacts));
+                },
+
+                editContact(contact){
+                    this.contact = contact;
+                    this.isEdit = true;
+                },
+
+                updateContact(contact){
+                    let contacts = this.contacts.map(contactMap =>{
+                        if(contactMap.id == contact.id){
+                            return contact;
+                        }
+
+                        return contactMap;
+                    });
+
+                    this.contacts = contacts;
+                    this.isEdit = false;
+                    localStorage.setItem('contactsApp', JSON.stringify(contacts));
+
+                    location.reload();
                 }
             }
         });
