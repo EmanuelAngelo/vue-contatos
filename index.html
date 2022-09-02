@@ -37,11 +37,11 @@
             </div>
             <div class="col-8 border-left">
                 <div class="contact">
-                    <div class="col-12 mb-2">
+                    <div class="col-12 mb-2" v-for="contact in contacts">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Fulano de tal</h5>
-                                <p class="card-text">fulano@gmail.com, 9898573745</p>
+                                <h5 class="card-title">{{contact.name}}</h5>
+                                <p class="card-text">{{contact.email}}, {{contact.phone}}</p>
                                 <a href="#" class="btn  btn-sm btn-primary">Editar</a>
                                 <a href="#" class="btn  btn-sm btn-danger">Deletar</a>
                             </div>
@@ -56,12 +56,16 @@
         let app = new Vue ({
             el: "#app",
             data: {
+                contacts: [],
                 name: 'Contatos App',
                 contact: {
                     name: '',
                     email: '',
                     phone: ''
                 }
+            },
+            created(){
+                this.contacts = JSON.parse(localStorage.getItem('contactsApp'))
             },
             methods: {
                 saveContact(contact){
@@ -74,6 +78,7 @@
                         // eu crio esta chave contatos
                         contacts = [contact];
                     }
+                    this.contacts = contacts; //atualizar e trazer o novo dado
                     // atualizar localStorage idependentimente de novo contato ou nova adicao
                     localStorage.setItem('contactsApp', JSON.stringify(contacts))
                 }
