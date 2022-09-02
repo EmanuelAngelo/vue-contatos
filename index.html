@@ -31,7 +31,7 @@
                         <input type="phone" class="form-control" placeholder="Telefone/Celular" v-model="contact.phone">
                     </div>
                     <div class="form-group ml-1">
-                        <button class="btn btn-sm btn-rounded btn-success" v-on:click.prevent="saveContact(contact)">Criar contatos</button>
+                        <button class="btn btn-sm btn-rounded btn-success" @click.prevent="saveContact(contact)">Criar contatos</button>
                     </div>
                 </form>
             </div>
@@ -43,7 +43,7 @@
                                 <h5 class="card-title">{{contact.name}}</h5>
                                 <p class="card-text">{{contact.email}}, {{contact.phone}}</p>
                                 <a href="#" class="btn  btn-sm btn-primary">Editar</a>
-                                <a href="#" class="btn  btn-sm btn-danger">Deletar</a>
+                                <a href="#" class="btn  btn-sm btn-danger" @click.prevent="removeContact(contact.id)">Deletar</a>
                             </div>
                         </div>
                     </div>
@@ -59,6 +59,7 @@
                 contacts: [],
                 name: 'Contatos App',
                 contact: {
+                    id: '',
                     name: '',
                     email: '',
                     phone: ''
@@ -69,7 +70,10 @@
             },
             methods: {
                 saveContact(contact){
+
                     let contacts = localStorage.getItem('contactsApp')
+                    contact.id = new Date().getTime();
+
                     if(contacts){
                         // atualizar meus contatos no localStorage
                         contacts = JSON.parse(contacts);
@@ -81,6 +85,21 @@
                     this.contacts = contacts; //atualizar e trazer o novo dado
                     // atualizar localStorage idependentimente de novo contato ou nova adicao
                     localStorage.setItem('contactsApp', JSON.stringify(contacts))
+                },
+
+                removeContact(contactId){
+                    let contacts = localStorage.getItem('contactsApp')
+
+                    if(!contacts) return;
+
+                    contacts = JSON.parse(contacts);
+
+                    contacts = contacts.filter((contact) => {
+                        return contact.id != contactId;
+                    });
+                    this.contacts = contacts;
+
+                    localStorage.setItem('contactsApp', JSON.stringify(contacts));
                 }
             }
         });
