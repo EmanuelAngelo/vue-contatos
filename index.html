@@ -31,7 +31,7 @@
                         <input type="phone" class="form-control" placeholder="Telefone/Celular" v-model="contact.phone">
                     </div>
                     <div class="form-group ml-1">
-                        <button class="btn btn-lg btn-rounded btn-success" v-on:click.prevent="saveContact(contact)">Criar contatos</button>
+                        <button class="btn btn-sm btn-rounded btn-success" v-on:click.prevent="saveContact(contact)">Criar contatos</button>
                     </div>
                 </form>
             </div>
@@ -65,7 +65,17 @@
             },
             methods: {
                 saveContact(contact){
-                    console.log(contact)
+                    let contacts = localStorage.getItem('contactsApp')
+                    if(contacts){
+                        // atualizar meus contatos no localStorage
+                        contacts = JSON.parse(contacts);
+                        contacts.push(contact);
+                    }else {
+                        // eu crio esta chave contatos
+                        contacts = [contact];
+                    }
+                    // atualizar localStorage idependentimente de novo contato ou nova adicao
+                    localStorage.setItem('contactsApp', JSON.stringify(contacts))
                 }
             }
         });
